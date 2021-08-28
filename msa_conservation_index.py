@@ -11,6 +11,10 @@ from Bio import AlignIO
 # Arguments
 
 msafn = sys.argv[1]
+if len(sys.argv) > 2:
+    show_per_prot_position = True
+else:
+    show_per_prot_position = False
 
 ##
 # Functions
@@ -54,10 +58,17 @@ norm_mat = load_substitution_matrix()
 
 msa = AlignIO.read(msafn, "fasta")
 
-# Compute per-position conservation index (Ci)
-
 msa_num_seqs = len(msa)
 msa_num_cols = msa.get_alignment_length()
+
+# Prepare a dict to track position of each protein
+# avoiding gaps. The key is the number of sequence
+# in the alignment (1st sequence has key 1,
+# 2nd sequence has key 2, etc...)
+
+prots_positions = {i:0 for i in range(msa_num_seqs)}
+
+# Compute per-position conservation index (Ci)
 
 for col in range(msa_num_cols):
     col_aas = msa[:, col]
@@ -76,10 +87,24 @@ for col in range(msa_num_cols):
         for aa2,f2 in freqs.items():
             Ci += f1*f2*norm_mat[(aa1, aa2)]
 
-    # Output Cis
-            
-    print(f"{col+1}\t{col_aas}\t{Ci}")
+    # Update position for each protein
 
+    if show_per_prot_position == True:
+        prots_positions_str = []
+        for i,aa in enumerate(col_aas):
+            if aa != "-":
+                prots_positions[i] += 1
+                prots_positions_str.append(str(prots_positions[i]))
+            else:
+                prots_positions_str.append("-")
+            
+        prots_positions_str = "\t".join(prots_positions_str)
         
+    # Output Cis
+    
+    if show_per_prot_position == True:
+        print(f"{col+1}\t{col_aas}\t{Ci}\t{prots_positions_str}")
+    else:
+        print(f"{col+1}\t{col_aas}\t{Ci}")
 
 ## END
