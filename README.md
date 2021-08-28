@@ -43,6 +43,34 @@ msa_conservation_index.py msa.fa true
 ```
 The new columns will correspond to the sequences in the same order as they appear in the MSA.
 For example, the 4th column will show the positions for the 1st protein in the MSA, the 5th column will show the positions for the 2nd protein, and so on.
+When a MSa position corresponds to a gap in a protein, a gap ("-") will be show instead of the position for that protein.
+
+#### Output example
+```
+...
+182     KKEEE-EDEDDDDEEDDDDD    0.6743711017023593      171     141     141     33      141     -
+       94      177     147     141     141     147     141     141     19      141     141     141
+     94      141
+183     IIIVV-IIIVVIIIIIIIII    0.8650000000000002      172     142     142     34      142     -
+       95      178     148     142     142     148     142     142     20      142     142     142
+     95      142
+184     LLLLM-MMMMMMMMMMMMMM    0.8146320343559643      173     143     143     35      143     -
+       96      179     149     143     143     149     143     143     21      143     143     143
+     96      143
+185     SSSLL-LFFFFFFFFFFFYF    0.5875381263966389      174     144     144     36      144     -
+       97      180     150     144     144     150     144     144     22      144     144     144
+     97      144
+186     KKKEI-KKKKKKKKKKKKKK    0.7853288239400202      175     145     145     37      145     -
+       98      181     151     145     145     151     145     145     23      145     145     145
+     98      145
+187     NNNNN-NNNNNNNNNNFFNF    0.6865000000000001      176     146     146     38      146     -
+       99      182     152     146     146     152     146     146     24      146     146     146
+     99      146
+188     PPPPP-PPPPPPPPPPPPPP    0.9025  177     147     147     39      147     -       100     183
+     153     147     147     153     147     147     25      147     147     147     100     147
+...
+```
+
 
 ### How it works
 
