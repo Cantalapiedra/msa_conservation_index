@@ -11,7 +11,7 @@ msa_conservation_index.py msa.fa
 Input data is a multiple sequence alignment (MSA) in fasta format.
 
 Output goes to standard out, with 3 tab-delimited columns:
-- Position (column) within the MSA.
+- 1-based position (column) within the MSA.
 - A string with the amino acids found in such position.
 - A conservation index (Ci) computed for such position.
 
@@ -36,7 +36,7 @@ Output goes to standard out, with 3 tab-delimited columns:
 
 The command outputs by default MSA positions (see above).
 However, positions for each protein are different, due to the presence of gaps.
-To add additional columns showing the position of each Ci for each protein, run the command using a second argument.
+To add additional columns showing the (1-based) position of each Ci for each protein, run the command using a second argument.
 For example:
 ```
 msa_conservation_index.py msa.fa true
