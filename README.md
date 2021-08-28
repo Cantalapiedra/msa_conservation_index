@@ -2,7 +2,9 @@
 Per-position conservation index of multiple sequence alignment
 
 ### How to run
+```
 msa_conservation_index.py msa.fa
+```
 
 ### Input and output formats
 
@@ -29,6 +31,18 @@ Output goes to standard out, with 3 tab-delimited columns:
 243     III-I--VVVVVVIIIVVIV    0.6775000000000001
 ...
 ```
+
+### Protein positions
+
+The command outputs by default MSA positions (see above).
+However, positions for each protein are different, due to the presence of gaps.
+To add additional columns showing the position of each Ci for each protein, run the command using a second argument.
+For example:
+```
+msa_conservation_index.py msa.fa true
+```
+The new columns will correspond to the sequences in the same order as they appear in the MSA.
+For example, the 4th column will show the positions for the 1st protein in the MSA, the 5th column will show the positions for the 2nd protein, and so on.
 
 ### How it works
 
