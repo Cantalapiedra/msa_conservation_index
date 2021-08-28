@@ -75,8 +75,10 @@ for col in range(msa_num_cols):
     for aa1,f1 in freqs.items():
         for aa2,f2 in freqs.items():
             Ci += f1*f2*norm_mat[(aa1, aa2)]
+
+    # Output Cis
             
-    print(f"{col}\t{col_aas}\t{Ci}")
+    print(f"{col+1}\t{col_aas}\t{Ci}")
 
         
 
