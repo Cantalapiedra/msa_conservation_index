@@ -19,6 +19,7 @@ else:
 ##
 # Functions
 
+#
 def load_substitution_matrix():
     
     ##
@@ -47,6 +48,46 @@ def load_substitution_matrix():
 
     return norm_mat
 
+#
+def compute_freqs(col_aas, msa_num_seqs):
+    '''
+    ComputeS unweighted aas frequencies
+    according to https://doi.org/10.1093/bioinformatics/17.8.700
+    '''
+    freqs = None
+    
+    col_counter = Counter(col_aas)
+    freqs = {aa:(col_counter[aa] / msa_num_seqs) for aa in col_counter if aa != "-"}
+    
+    return freqs
+
+#
+def compute_Ci(freqs, norm_mat):
+    '''
+    Compute "sum-of-pairs" conservation index (Ci)
+    according to https://doi.org/10.1093/bioinformatics/17.8.700
+    '''
+    Ci = 0
+    
+    for aa1,f1 in freqs.items():
+        for aa2,f2 in freqs.items():
+            Ci += f1*f2*norm_mat[(aa1, aa2)]
+
+    return Ci
+
+#
+def update_per_prot_positions(col_aas, prots_positions):
+    prots_positions_str = []
+    for i,aa in enumerate(col_aas):
+        if aa != "-":
+            prots_positions[i] += 1
+            prots_positions_str.append(str(prots_positions[i]))
+        else:
+            prots_positions_str.append("-")
+            
+    return "\t".join(prots_positions_str)
+
+
 ##
 # Main
 
@@ -68,42 +109,36 @@ msa_num_cols = msa.get_alignment_length()
 
 prots_positions = {i:0 for i in range(msa_num_seqs)}
 
+# Prepare and output header
+
+if show_per_prot_position == True:
+    print("msa_pos\talignment\tCi", end = "")
+    for i in range(0, msa_num_seqs - 1):
+        print(f"\t{msa[i,:].id}", end = "")
+    print()
+else:
+    print("msa_pos\talignment\tCi")
+
+
 # Compute per-position conservation index (Ci)
 
 for col in range(msa_num_cols):
     col_aas = msa[:, col]
+
+    # Compute freqs
+
+    freqs = compute_freqs(col_aas, msa_num_seqs)
+
+    # Compute conservation index (Ci)
+
+    Ci = compute_Ci(freqs, norm_mat)
     
-    # Compute unweighted aas frequencies
-    # according to https://doi.org/10.1093/bioinformatics/17.8.700
-
-    col_counter = Counter(col_aas)
-    freqs = {aa:(col_counter[aa] / msa_num_seqs) for aa in col_counter if aa != "-"}
-
-    # Compute "sum-of-pairs" conservation index (Ci)
-    # according to https://doi.org/10.1093/bioinformatics/17.8.700
-
-    Ci = 0
-    for aa1,f1 in freqs.items():
-        for aa2,f2 in freqs.items():
-            Ci += f1*f2*norm_mat[(aa1, aa2)]
-
     # Update position for each protein
 
     if show_per_prot_position == True:
-        prots_positions_str = []
-        for i,aa in enumerate(col_aas):
-            if aa != "-":
-                prots_positions[i] += 1
-                prots_positions_str.append(str(prots_positions[i]))
-            else:
-                prots_positions_str.append("-")
-            
-        prots_positions_str = "\t".join(prots_positions_str)
-        
-    # Output Cis
-    
-    if show_per_prot_position == True:
+        prots_positions_str = update_per_prot_positions(col_aas, prots_positions)
         print(f"{col+1}\t{col_aas}\t{Ci}\t{prots_positions_str}")
+        
     else:
         print(f"{col+1}\t{col_aas}\t{Ci}")
 
