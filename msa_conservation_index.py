@@ -113,7 +113,7 @@ prots_positions = {i:0 for i in range(msa_num_seqs)}
 
 if show_per_prot_position == True:
     print("msa_pos\talignment\tCi", end = "")
-    for i in range(0, msa_num_seqs - 1):
+    for i in range(0, msa_num_seqs):
         print(f"\t{msa[i,:].id}", end = "")
     print()
 else:
